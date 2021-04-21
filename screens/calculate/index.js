@@ -2,12 +2,20 @@ import React from "react";
 import { 
     View,
     Text,
-    StyleSheet
+    StyleSheet,
 } from "react-native";
+
+import {Button} from "react-native-paper"
+
+import auth from "@react-native-firebase/auth"
 
 const Calculate = (props) => (
     <View style={styles.container}>
-        <Text>Calculate</Text>
+        <Button mode="contained" color="#1d1d1d" onPress={()=>{
+                auth()
+                .signOut()
+                .then(() => console.log("Signed out!"));
+            }}>Sign out</Button>
     </View>
     )
 export default Calculate;
