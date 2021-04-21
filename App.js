@@ -6,6 +6,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Text>Open App.js to start working on CMC!</Text>
+      <Text>Developed by Pratham Aggarwal</Text>
       <StatusBar style="auto" />
     </View>
   );
