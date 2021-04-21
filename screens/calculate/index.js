@@ -10,6 +10,8 @@ import {
 import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
 
+import {time, Thrust} from "./data"
+
 
 import { Title, TextInput, Button, Paragraph } from 'react-native-paper';
 
@@ -19,12 +21,12 @@ const getRaceTime = ({data}) => {
     var m = data.mass
     var k = 0.5 * data.cd * data.density * data.height * data.width
     var frontalArea = data.height * data.width
-    var t = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4]
-    var T = [0, 100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0, 0, 0, 0]
-    var v = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    var t = data.time
+    var T = data.thrust
+    var v = [0]
 
-    for (var i = 1; i < 14; i++) { 
-        v[i] = (((-1 * m) / t[i]) + Math.sqrt((Math.pow((m / t[i]), 2) + (4 * k * T[i])))) / (2 * k)
+    for (var i = 1; i < data.time.length; i++) { 
+        v.push((((-1 * m) / t[i]) + Math.sqrt((Math.pow((m / t[i]), 2) + (4 * k * T[i])))) / (2 * k))
     }
 
     return v;
@@ -41,7 +43,8 @@ const addResults = async ({data}, ref, velocityTable, timeStamp) => {
     dragConstant: data.k,
     velocityTable: velocityTable,
     time: data.time,
-    timeStamp: timeStamp
+    thrust: data.thrust,
+    timeStamp: timeStamp,
   });
 }
 
@@ -49,7 +52,6 @@ const addResults = async ({data}, ref, velocityTable, timeStamp) => {
 const Calculate = ({navigation, route}) => {
 
     const user = (route.params.user)
-    console.log(user)
     const [cd, setCd] = useState(0);
     const [mass, setMass] = useState(0);
     const [height, setHeight] = useState(0);
@@ -110,7 +112,7 @@ const Calculate = ({navigation, route}) => {
             <View>
                 <Button
                 onPress = {()=>{
-                    var k = 0.5 * parseFloat(cd) * parseFloat(height) * parseFloat(width) * 0.0000012041
+                    var k = 0.5 * parseFloat(cd) * parseFloat(height / 1000) * parseFloat(width / 1000) * 0.0000012041
                     var data = {
                         date: currentDate,
                         mass: parseFloat(mass/1000),
@@ -119,7 +121,8 @@ const Calculate = ({navigation, route}) => {
                         width: parseFloat(width/1000),
                         density: 1.2041,
                         k: k,
-                        time: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3, 1.4]
+                        time: time,
+                        thrust: Thrust,
                     }
                     var velocityTable = getRaceTime({data})
                     // getRaceTime({data}, ref)
