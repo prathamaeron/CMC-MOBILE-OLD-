@@ -9,6 +9,7 @@
   "dependencies": {
     "@react-native-firebase/app": "^11.3.2",
     "@react-native-firebase/auth": "^11.3.2",
+    "@react-native-firebase/firestore": "^11.3.2",
     "@react-native-google-signin/google-signin": "^6.0.0",
     "@react-navigation/bottom-tabs": "^5.11.10",
     "@react-navigation/native": "^5.9.4",
